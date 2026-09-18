@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBP Store - ระบบร้านค้าออนไลน์อุปกรณ์คอมพิวเตอร์</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- SweetAlert2 CSS & JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary-blue: #2997ff;
+            --dark-blue: #0a2540;
+            --deep-navy: #000000;
+            --bg-dark: #000000;
+            --card-bg: #161617;
+            --accent-cyan: #2997ff;
+            --accent-glow: rgba(41, 151, 255, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glassmorphic Navbar Apple Style */
+        .navbar {
+            background: rgba(22, 22, 23, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            color: #fff;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            border-color: rgba(41, 151, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-primary {
+            background: #0071e3;
+            border: none;
+            font-weight: 500;
+            border-radius: 980px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-primary:hover {
+            background: #0077ed;
+            transform: scale(1.02);
+        }
+
+        .modal-content {
+            background-color: rgba(22, 22, 23, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+        }
+
+        .badge-cart {
+            background-color: #0071e3;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .admin-dashboard-card {
+            background: rgba(22, 22, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        /* Apple Style Forms */
+        .form-control,
+        .form-select {
+            background-color: rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            color: #ffffff !important;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #2997ff !important;
+            background-color: rgba(255, 255, 255, 0.18) !important;
+            box-shadow: 0 0 0 4px rgba(41, 151, 255, 0.3) !important;
+            color: #ffffff !important;
+        }
+
+        .form-select option {
+            background-color: #161617;
+            color: #ffffff;
+        }
+
+        /* Glass Login Box */
+        .login-card {
+            background: rgba(22, 22, 23, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Dropdown 3 ขีด Apple Style */
+        .dropdown-menu-dark-custom {
+            background: rgba(22, 22, 23, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            padding: 8px;
+        }
+
+        .dropdown-menu-dark-custom .dropdown-item {
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .dropdown-menu-dark-custom .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #2997ff;
+        }
+
+        /* --- Apple Minimalist Hero Banner --- */
+        .apple-hero {
+            background: radial-gradient(circle at 50% -20%, #1c325c 0%, #000000 80%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .apple-hero-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(180deg, #ffffff 0%, #d1d1d6 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .apple-hero-subtitle {
+            font-size: 1.15rem;
+            color: #a1a1a6;
+            font-weight: 400;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Header Search Input Style */
+        .nav-search-input {
+            width: 190px;
+            padding-left: 40px !important;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-search-input:focus {
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="#" onclick="showSection('user')">
+                <i class="bi bi-cpu-fill text-primary me-2 fs-4"></i><span style="letter-spacing: -0.03em;">TBP
+                    Store</span>
+            </a>
+
+            <div class="d-flex align-items-center ms-auto">
+                <!-- ช่องค้นหาสินค้าบนขวา -->
+                <div class="position-relative me-2 d-none d-sm-block">
+                    <input type="text" id="navSearchInput" class="form-control nav-search-input rounded-pill"
+                        placeholder="ค้นหาสินค้า..." onkeyup="filterProducts()">
+                    <i
+                        class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-white-50 pointer-events-none"></i>
+                </div>
+
+                <!-- ปุ่มตะกร้าสินค้าแบบพกพา -->
+                <button class="btn btn-outline-light rounded-pill px-3 me-2 border-0 bg-white bg-opacity-10"
+                    data-bs-toggle="modal" data-bs-target="#cartModal">
+                    🛒 <span id="cartCount" class="badge badge-cart rounded-pill">0</span>
+                </button>
+
+                <!-- ปุ่ม Dropdown เมนู 3 ขีด -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-light rounded-circle p-2 border-0 bg-white bg-opacity-10"
+                        type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                        style="width: 42px; height: 42px;">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark-custom mt-2"
+                        aria-labelledby="menuDropdown">
+                        <li>
+                            <h6 class="dropdown-header text-white-50">เมนูหลัก</h6>
+                        </li>
+                        <li><a class="dropdown-item" href="#" onclick="showSection('user')"><i
+                                    class="bi bi-house-door me-2"></i>หน้าแรกสินค้า</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="showSection('track')"><i
+                                    class="bi bi-truck me-2"></i>ติดตามคำสั่งซื้อ</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="filterByCategory('')"><i
+                                    class="bi bi-grid me-2"></i>สินค้าทั้งหมด</a></li>
+                        <li>
+                            <hr class="dropdown-divider border-secondary opacity-25">
+                        </li>
+                        <li>
+                            <h6 class="dropdown-header text-white-50">หมวดหมู่</h6>
+                        </li>
+                        <div id="dynamicCategoryMenu"></div>
+                        <li>
+                            <hr class="dropdown-divider border-secondary opacity-25">
+                        </li>
+                        <li>
+                            <h6 class="dropdown-header text-white-50">ช่องทางการติดต่อ</h6>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.facebook.com/NattaPoom49/?locale=th_TH" target="_blank">
+                                <i class="bi bi-facebook text-primary me-2"></i>Facebook: ทีมงาน 1
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.facebook.com/boom.boom.9525?locale=th_TH" target="_blank">
+                                <i class="bi bi-facebook text-primary me-2"></i>Facebook: ทีมงาน 2
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="https://www.facebook.com/kanisorn.thangrak.2024?locale=th_TH" target="_blank">
+                                <i class="bi bi-facebook text-primary me-2"></i>Facebook: ทีมงาน 3
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider border-secondary opacity-25">
+                        </li>
+                        <li id="adminMenuItem">
+                            <a class="dropdown-item text-warning" href="#" id="loginBtn" data-bs-toggle="modal"
+                                data-bs-target="#loginModal">
+                                <i class="bi bi-shield-lock me-2"></i>เข้าสู่ระบบ Admin
+                            </a>
+                            <a class="dropdown-item text-danger d-none" href="#" id="logoutBtn" onclick="logoutAdmin()">
+                                <i class="bi bi-box-arrow-right me-2"></i>ออกจากระบบ Admin
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container สำหรับผู้ใช้งาน (User View) -->
+    <div class="container my-5" id="userView">
+        <div class="apple-hero mb-5 text-center">
+            <h1 class="apple-hero-title mb-2">TBP Store</h1>
+            <p class="apple-hero-subtitle">ขีดสุดแห่งประสิทธิภาพ อุปกรณ์คอมพิวเตอร์และอะไหล่ไอทีระดับพรีเมียม</p>
+        </div>
+
+        <div class="row" id="productGrid">
+            <div class="text-center my-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-3 text-muted">กำลังโหลดรายการสินค้า...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- หน้าติดตามคำสั่งซื้อ (Track Order View) -->
+    <div class="container my-5 d-none" id="trackView">
+        <div class="apple-hero mb-4 text-center">
+            <h2 class="apple-hero-title mb-2">ติดตามสถานะคำสั่งซื้อ</h2>
+            <p class="apple-hero-subtitle">ค้นหาสถานะการจัดส่งโดยใช้เบอร์โทรศัพท์ที่คุณกรอกไว้ตอนสั่งซื้อ</p>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-6">
+                <form id="trackForm" onsubmit="trackOrder(event)">
+                    <div class="input-group">
+                        <input type="tel" id="trackPhoneInput" class="form-control"
+                            placeholder="กรอกเบอร์โทรศัพท์ของคุณ..." required>
+                        <button class="btn btn-primary px-4" type="submit"><i class="bi bi-search me-1"></i>
+                            ค้นหา</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="trackResultContainer"></div>
+    </div>
+
+    <!-- Admin Dashboard (สำหรับผู้ดูแลระบบ) -->
+    <div class="container my-5 d-none" id="adminView">
+        <div class="admin-dashboard-card mb-4">
+            <h3 class="text-white fw-bold mb-3 d-flex align-items-center"><i
+                    class="bi bi-speedometer2 text-primary me-2"></i>แผงควบคุมผู้ดูแลระบบ</h3>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 text-center">
+                        <h6 class="text-white-50">จำนวนสินค้าทั้งหมด</h6>
+                        <h2 class="text-white mb-0" id="totalProductsCount">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 text-center">
+                        <h6 class="text-white-50">จำนวนคำสั่งซื้อ</h6>
+                        <h2 class="text-warning mb-0" id="totalOrdersCount">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-10 text-center">
+                        <h6 class="text-white-50">ยอดขายรวม</h6>
+                        <h2 class="text-success mb-0" id="totalSalesAmount">0 ฿</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- แท็บจัดการ Admin -->
+        <ul class="nav nav-pills mb-4" id="adminTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active rounded-pill px-4 me-2" id="orders-tab" data-bs-toggle="pill"
+                    data-bs-target="#orders-pane">📦 จัดการคำสั่งซื้อ</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill px-4 me-2" id="products-tab" data-bs-toggle="pill"
+                    data-bs-target="#products-pane">💻 จัดการสินค้า (CRUD)</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link rounded-pill px-4" id="categories-tab" data-bs-toggle="pill"
+                    data-bs-target="#categories-pane">🏷️ จัดการหมวดหมู่</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="adminTabContent">
+            <!-- รายการคำสั่งซื้อ -->
+            <div class="tab-pane fade show active" id="orders-pane">
+                <div class="table-responsive rounded-4 border border-white border-opacity-10">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>รหัสสั่งซื้อ</th>
+                                <th>ชื่อลูกค้า</th>
+                                <th>เบอร์โทร</th>
+                                <th>ที่อยู่จัดส่ง</th>
+                                <th>ราคารวม</th>
+                                <th>สถานะ</th>
+                                <th class="text-center">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrderList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- จัดการสินค้า (CRUD) -->
+            <div class="tab-pane fade" id="products-pane">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">รายการสินค้าในระบบ</h5>
+                    <button class="btn btn-primary rounded-pill px-3" onclick="openAddProductModal()">
+                        <i class="bi bi-plus-lg me-1"></i> เพิ่มสินค้าใหม่
+                    </button>
+                </div>
+                <div class="table-responsive rounded-4 border border-white border-opacity-10">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>รูปภาพ</th>
+                                <th>รหัส</th>
+                                <th>ชื่อสินค้า</th>
+                                <th>หมวดหมู่</th>
+                                <th>ราคา</th>
+                                <th>คงเหลือ</th>
+                                <th class="text-center">การจัดการ (CRUD)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductList"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- จัดการหมวดหมู่ (Category CRUD) -->
+            <div class="tab-pane fade" id="categories-pane">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="text-white mb-0">รายการหมวดหมู่สินค้า</h5>
+                    <button class="btn btn-primary rounded-pill px-3" onclick="openAddCategoryModal()">
+                        <i class="bi bi-plus-lg me-1"></i> เพิ่มหมวดหมู่ใหม่
+                    </button>
+                </div>
+                <div class="table-responsive rounded-4 border border-white border-opacity-10">
+                    <table class="table table-dark table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>รหัสหมวดหมู่</th>
+                                <th>ชื่อหมวดหมู่</th>
+                                <th class="text-center">การจัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminCategoryList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login Admin -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-card p-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white fw-bold"><i
+                            class="bi bi-shield-lock-fill text-primary me-2"></i>เข้าสู่ระบบผู้ดูแลระบบ</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">ชื่อผู้ใช้งาน (Username)</label>
+                            <input type="text" id="adminUsername" class="form-control" placeholder="tbp2026" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">รหัสผ่าน (Password)</label>
+                            <input type="password" id="adminPassword" class="form-control" placeholder="tbp2026"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-2">เข้าสู่ระบบ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal แก้ไขข้อมูลออเดอร์/ลูกค้า -->
+    <div class="modal fade" id="editOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom border-white border-opacity-10">
+                    <h5 class="modal-title text-white fw-bold">✏️ แก้ไขข้อมูลคำสั่งซื้อ & ลูกค้า</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editOrderForm" onsubmit="saveEditedOrder(event)">
+                        <input type="hidden" id="editOrderId">
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">ชื่อ-นามสกุล ลูกค้า</label>
+                            <input type="text" id="editCustName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">เบอร์โทรศัพท์</label>
+                            <input type="tel" id="editCustPhone" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">ที่อยู่จัดส่ง</label>
+                            <textarea id="editCustAddress" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">สถานะคำสั่งซื้อ</label>
+                            <select id="editOrderStatus" class="form-select" required>
+                                <option value="รอดำเนินการ">รอดำเนินการ</option>
+                                <option value="กำลังจัดส่ง">กำลังจัดส่ง</option>
+                                <option value="จัดส่งแล้ว">จัดส่งแล้ว</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-2">บันทึกการแก้ไข</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal เพิ่ม/แก้ไขสินค้า -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom border-white border-opacity-10">
+                    <h5 class="modal-title text-white fw-bold" id="productModalTitle">จัดการสินค้า</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="pId">
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">ชื่อสินค้า</label>
+                            <input type="text" id="pName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">หมวดหมู่</label>
+                            <select id="pCategory" class="form-select" required></select>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-white-50">ราคา (บาท)</label>
+                                <input type="number" id="pPrice" class="form-control" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-white-50">สต๊อก (ชิ้น)</label>
+                                <input type="number" id="pStock" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">URL รูปภาพสินค้า</label>
+                            <input type="url" id="pImage" class="form-control" placeholder="https://..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-2"
+                            id="saveProductBtn">บันทึกข้อมูล</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal เพิ่ม/แก้ไขหมวดหมู่ -->
+    <div class="modal fade" id="categoryModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom border-white border-opacity-10">
+                    <h5 class="modal-title text-white fw-bold" id="categoryModalTitle">จัดการหมวดหมู่</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="categoryForm" onsubmit="saveCategory(event)">
+                        <input type="hidden" id="catId">
+                        <div class="mb-3">
+                            <label class="form-label text-white-50">ชื่อหมวดหมู่</label>
+                            <input type="text" id="catName" class="form-control" placeholder="เช่น CPU, RAM, Monitor..."
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-2">บันทึกหมวดหมู่</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal ตะกร้าสินค้า -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-bottom border-white border-opacity-10">
+                    <h5 class="modal-title text-white">🛒 ตะกร้าสินค้า</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItems"></div>
+                    <hr class="border-white border-opacity-10">
+                    <div class="d-flex justify-content-between fw-bold fs-5">
+                        <span>ราคารวมทั้งหมด:</span>
+                        <span id="cartTotal" class="text-primary">0 บาท</span>
+                    </div>
+
+                    <form id="orderForm" class="mt-4">
+                        <h6 class="text-white fw-bold mb-3">กรอกข้อมูลจัดส่ง</h6>
+                        <div class="mb-2">
+                            <input type="text" id="custName" class="form-control" placeholder="ชื่อ-นามสกุล" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea id="custAddress" class="form-control" placeholder="ที่อยู่จัดส่ง" rows="2"
+                                required></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <input type="tel" id="custPhone" class="form-control" placeholder="เบอร์โทรศัพท์" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-3">ยืนยันการสั่งซื้อ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKZVZ4Rq0veNDvQJuKg0Up3JHugpqmjQ_Fhx4DqW67hRW7oPNfAbeQXUoFdMFhhAY/exec";
+
+        let products = [];
+        let categories = [
+            { id: 'CAT-1', name: 'CPU' },
+            { id: 'CAT-2', name: 'RAM' },
+            { id: 'CAT-3', name: 'Graphics Card' }
+        ];
+        let orders = [];
+        let cart = [];
+        let currentCategoryFilter = "";
+        let isAdminLoggedIn = false;
+
+        window.onload = function () {
+            const cachedProducts = localStorage.getItem('tbp_products');
+            const cachedCategories = localStorage.getItem('tbp_categories');
+
+            if (cachedProducts) {
+                products = JSON.parse(cachedProducts);
+                renderProducts(products);
+            }
+            if (cachedCategories) {
+                categories = JSON.parse(cachedCategories);
+            }
+
+            renderCategoryMenu();
+            updateProductModalCategories();
+            fetchAllDataFast();
+        };
+
+        function showSection(section) {
+            document.getElementById('userView').classList.add('d-none');
+            document.getElementById('trackView').classList.add('d-none');
+            document.getElementById('adminView').classList.add('d-none');
+
+            if (section === 'user') document.getElementById('userView').classList.remove('d-none');
+            if (section === 'track') document.getElementById('trackView').classList.remove('d-none');
+            if (section === 'admin') document.getElementById('adminView').classList.remove('d-none');
+        }
+
+        function fetchAllDataFast() {
+            Promise.all([
+                fetch(`${SCRIPT_URL}?action=getProducts`).then(r => r.json()).catch(() => []),
+                fetch(`${SCRIPT_URL}?action=getCategories`).then(r => r.json()).catch(() => []),
+                fetch(`${SCRIPT_URL}?action=getOrders`).then(r => r.json()).catch(() => [])
+            ]).then(([pData, cData, oData]) => {
+                if (pData && pData.length > 0) {
+                    products = pData;
+                    localStorage.setItem('tbp_products', JSON.stringify(pData));
+                    renderProducts(products);
+                    if (isAdminLoggedIn) renderAdminProducts();
+                }
+
+                if (cData && Array.isArray(cData) && cData.length > 0) {
+                    categories = cData;
+                    localStorage.setItem('tbp_categories', JSON.stringify(cData));
+                }
+
+                renderCategoryMenu();
+                updateProductModalCategories();
+                if (isAdminLoggedIn) renderAdminCategories();
+
+                if (oData && Array.isArray(oData)) {
+                    orders = oData;
+                    if (isAdminLoggedIn) {
+                        renderAdminOrders();
+                        updateAdminDashboard();
+                    }
+                }
+            }).catch(err => console.error("Fast Fetch Error:", err));
+        }
+
+        function renderCategoryMenu() {
+            const menu = document.getElementById('dynamicCategoryMenu');
+            if (!menu) return;
+            menu.innerHTML = '';
+
+            if (!categories || categories.length === 0) {
+                menu.innerHTML = `<li><span class="dropdown-item text-white-50 small">ไม่มีหมวดหมู่</span></li>`;
+                return;
+            }
+
+            categories.forEach(c => {
+                const catName = c.name || c.category || c;
+                menu.innerHTML += `
+                    <li><a class="dropdown-item" href="#" onclick="filterByCategory('${catName}')"><i class="bi bi-tag me-2"></i>${catName}</a></li>
+                `;
+            });
+        }
+
+        function updateProductModalCategories() {
+            const select = document.getElementById('pCategory');
+            if (!select) return;
+            select.innerHTML = '';
+
+            categories.forEach(c => {
+                const catName = c.name || c.category || c;
+                select.innerHTML += `<option value="${catName}">${catName}</option>`;
+            });
+        }
+
+        function filterByCategory(cat) {
+            currentCategoryFilter = cat;
+            showSection('user');
+            filterProducts();
+        }
+
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+
+            if (items.length === 0) {
+                grid.innerHTML = '<p class="text-center text-white-50 fs-5 my-5">ไม่พบรายการสินค้า</p>';
+                return;
+            }
+
+            items.forEach(p => {
+                grid.innerHTML += `
+                    <div class="col-md-4 col-sm-6 mb-4">
+                        <div class="card h-100 p-2">
+                            <img src="${p.image}" class="card-img-top" alt="${p.name}" style="height: 200px; object-fit: cover; border-radius: 14px;">
+                            <div class="card-body d-flex flex-column pt-3">
+                                <span class="badge bg-white bg-opacity-10 text-primary mb-2 align-self-start rounded-pill px-3 py-2">${p.category}</span>
+                                <h5 class="card-title fs-6 fw-bold mb-2">${p.name}</h5>
+                                <p class="text-white fw-bold fs-5 mt-auto mb-1">${Number(p.price).toLocaleString()} ฿</p>
+                                <p class="small text-white-50 mb-3">คงเหลือ: ${p.stock} ชิ้น</p>
+                                <button class="btn btn-primary w-100 rounded-pill py-2" onclick="addToCart('${p.id}')">
+                                    <i class="bi bi-cart-plus me-1"></i> เพิ่มลงตะกร้า
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterProducts() {
+            const navSearch = document.getElementById('navSearchInput').value.toLowerCase().trim();
+
+            const filtered = products.filter(p => {
+                const matchCategory = currentCategoryFilter === "" || p.category === currentCategoryFilter;
+                const matchSearch = navSearch === "" || p.name.toLowerCase().includes(navSearch);
+                return matchCategory && matchSearch;
+            });
+
+            renderProducts(filtered);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const item = cart.find(c => c.id === productId);
+
+            if (item) {
+                item.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCartUI();
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'เพิ่มสินค้าลงตะกร้าแล้ว',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#161617',
+                color: '#fff'
+            });
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+
+            const cartContainer = document.getElementById('cartItems');
+            cartContainer.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                cartContainer.innerHTML += `
+                    <div class="d-flex justify-content-between align-items-center mb-2 p-3 bg-white bg-opacity-10 rounded-3">
+                        <div>
+                            <div class="fw-bold">${item.name}</div>
+                            <small class="text-white-50">${Number(item.price).toLocaleString()} ฿ x ${item.qty}</small>
+                        </div>
+                        <div>
+                            <span class="me-3 text-primary fw-bold">${itemTotal.toLocaleString()} ฿</span>
+                            <button class="btn btn-sm btn-outline-danger border-0" onclick="removeFromCart('${item.id}')"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cartTotal').innerText = total.toLocaleString() + ' บาท';
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function trackOrder(e) {
+            e.preventDefault();
+            const phone = document.getElementById('trackPhoneInput').value.trim();
+            const container = document.getElementById('trackResultContainer');
+            container.innerHTML = '';
+
+            const matchedOrders = orders.filter(o => o.phone == phone);
+
+            if (matchedOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center my-5 text-white-50">
+                        <i class="bi bi-exclamation-circle fs-1 mb-2 d-block text-warning"></i>
+                        <h5>ไม่พบข้อมูลคำสั่งซื้อที่เชื่อมโยงกับเบอร์โทรศัพท์นี้</h5>
+                        <p class="small">โปรดตรวจสอบเบอร์โทรศัพท์และลองอีกครั้ง</p>
+                    </div>
+                `;
+                return;
+            }
+
+            matchedOrders.forEach(o => {
+                let badgeClass = 'bg-warning text-dark';
+                if (o.status === 'กำลังจัดส่ง') badgeClass = 'bg-info text-dark';
+                if (o.status === 'จัดส่งแล้ว') badgeClass = 'bg-success';
+
+                container.innerHTML += `
+                    <div class="card mb-4 p-4 border border-white border-opacity-10">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <span class="badge bg-white bg-opacity-10 text-primary fs-6 mb-1">${o.order_id}</span>
+                                <div class="small text-white-50">วันที่สั่งซื้อ: ${o.created_at || '-'}</div>
+                            </div>
+                            <span class="badge ${badgeClass} fs-6 px-3 py-2 rounded-pill">${o.status}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <strong>ชื่อผู้รับ:</strong> ${o.customer_name}<br>
+                                <strong>เบอร์โทร:</strong> ${o.phone}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <strong>ที่อยู่จัดส่ง:</strong> ${o.address}<br>
+                                <strong>ยอดชำระรวม:</strong> <span class="text-primary fw-bold">${Number(o.total_price).toLocaleString()} ฿</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'ตะกร้าสินค้าว่างเปล่า',
+                    text: 'กรุณาเลือกสินค้าก่อนทำการสั่งซื้อครับ',
+                    background: '#161617',
+                    color: '#fff',
+                    confirmButtonColor: '#0071e3'
+                });
+            }
+
+            const custName = document.getElementById('custName').value;
+            const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            Swal.fire({
+                title: 'กำลังส่งข้อมูลคำสั่งซื้อ...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                background: '#161617',
+                color: '#fff',
+                didOpen: () => Swal.showLoading()
+            });
+
+            const payload = {
+                action: 'createOrder',
+                customer_name: custName,
+                address: document.getElementById('custAddress').value,
+                phone: document.getElementById('custPhone').value,
+                items: cart,
+                total_price: totalPrice
+            };
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        cart = [];
+                        updateCartUI();
+                        document.getElementById('orderForm').reset();
+                        bootstrap.Modal.getInstance(document.getElementById('cartModal')).hide();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'สั่งซื้อสินค้าสำเร็จ!',
+                            html: `
+                                <div class="text-start mt-3 p-3 rounded-3" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                    <p class="mb-1"><strong>คุณ:</strong> ${custName}</p>
+                                    <p class="mb-1"><strong>รหัสคำสั่งซื้อ:</strong> <span class="text-primary fw-bold">${data.order_id}</span></p>
+                                    <p class="mb-0"><strong>ยอดชำระรวม:</strong> <span class="text-success fw-bold">${totalPrice.toLocaleString()} บาท</span></p>
+                                </div>
+                                <p class="small text-white-50 mt-3 mb-0">ขอบคุณที่เลือกซื้อสินค้ากับ TBP Store ครับ</p>
+                            `,
+                            background: '#161617',
+                            color: '#fff',
+                            confirmButtonText: 'ตกลง',
+                            confirmButtonColor: '#0071e3'
+                        });
+                        fetchAllDataFast();
+                    }
+                });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const user = document.getElementById('adminUsername').value;
+            const pass = document.getElementById('adminPassword').value;
+
+            if (user === 'tbp2026' && pass === 'tbp2026') {
+                isAdminLoggedIn = true;
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                document.getElementById('loginBtn').classList.add('d-none');
+                document.getElementById('logoutBtn').classList.remove('d-none');
+                showSection('admin');
+                renderAdminProducts();
+                renderAdminCategories();
+                renderAdminOrders();
+                updateAdminDashboard();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'เข้าสู่ระบบสำเร็จ',
+                    text: 'ยินดีต้อนรับสู่แผงควบคุมผู้ดูแลระบบ TBP Store',
+                    timer: 1500,
+                    showConfirmButton: false,
+                    background: '#161617',
+                    color: '#fff'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เข้าสู่ระบบไม่สำเร็จ',
+                    text: 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง',
+                    background: '#161617',
+                    color: '#fff',
+                    confirmButtonColor: '#0071e3'
+                });
+            }
+        });
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('loginBtn').classList.remove('d-none');
+            document.getElementById('logoutBtn').classList.add('d-none');
+            showSection('user');
+
+            Swal.fire({
+                icon: 'info',
+                title: 'ออกจากระบบแล้ว',
+                timer: 1200,
+                showConfirmButton: false,
+                background: '#161617',
+                color: '#fff'
+            });
+        }
+
+        function updateAdminDashboard() {
+            document.getElementById('totalProductsCount').innerText = products.length;
+            document.getElementById('totalOrdersCount').innerText = orders.length;
+            const totalSales = orders.reduce((sum, o) => sum + Number(o.total_price || 0), 0);
+            document.getElementById('totalSalesAmount').innerText = totalSales.toLocaleString() + ' ฿';
+        }
+
+        function renderAdminOrders() {
+            const tbody = document.getElementById('adminOrderList');
+            tbody.innerHTML = '';
+
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-white-50 py-4">ยังไม่มีข้อมูลคำสั่งซื้อในระบบ</td></tr>';
+                return;
+            }
+
+            orders.forEach(o => {
+                let badgeClass = 'bg-warning text-dark';
+                if (o.status === 'กำลังจัดส่ง') badgeClass = 'bg-info text-dark';
+                if (o.status === 'จัดส่งแล้ว') badgeClass = 'bg-success';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><span class="badge bg-white bg-opacity-10">${o.order_id}</span></td>
+                        <td>${o.customer_name || '-'}</td>
+                        <td>${o.phone || '-'}</td>
+                        <td><small class="text-white-50">${o.address || '-'}</small></td>
+                        <td class="text-primary fw-bold">${Number(o.total_price || 0).toLocaleString()} ฿</td>
+                        <td><span class="badge ${badgeClass}">${o.status || 'รอดำเนินการ'}</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-warning rounded-pill px-3 me-1" onclick="openEditOrderModal('${o.order_id}')">
+                                <i class="bi bi-pencil-square"></i> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="deleteOrder('${o.order_id}')">
+                                <i class="bi bi-trash"></i> ลบ
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openEditOrderModal(orderId) {
+            const o = orders.find(item => item.order_id === orderId);
+            if (!o) return;
+
+            document.getElementById('editOrderId').value = o.order_id;
+            document.getElementById('editCustName').value = o.customer_name || '';
+            document.getElementById('editCustPhone').value = o.phone || '';
+            document.getElementById('editCustAddress').value = o.address || '';
+            document.getElementById('editOrderStatus').value = o.status || 'รอดำเนินการ';
+
+            new bootstrap.Modal(document.getElementById('editOrderModal')).show();
+        }
+
+        function saveEditedOrder(e) {
+            e.preventDefault();
+            const orderId = document.getElementById('editOrderId').value;
+            const payload = {
+                action: 'updateOrder',
+                order_id: orderId,
+                customer_name: document.getElementById('editCustName').value,
+                phone: document.getElementById('editCustPhone').value,
+                address: document.getElementById('editCustAddress').value,
+                status: document.getElementById('editOrderStatus').value
+            };
+
+            const idx = orders.findIndex(o => o.order_id === orderId);
+            if (idx !== -1) {
+                orders[idx].customer_name = payload.customer_name;
+                orders[idx].phone = payload.phone;
+                orders[idx].address = payload.address;
+                orders[idx].status = payload.status;
+            }
+
+            renderAdminOrders();
+            updateAdminDashboard();
+            bootstrap.Modal.getInstance(document.getElementById('editOrderModal')).hide();
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'อัปเดตคำสั่งซื้อสำเร็จ',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#161617',
+                color: '#fff'
+            });
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+                .then(() => fetchAllDataFast());
+        }
+
+        function deleteOrder(orderId) {
+            Swal.fire({
+                title: 'ยืนยันการลบคำสั่งซื้อ?',
+                text: `คุณต้องการลบคำสั่งซื้อ ${orderId} หรือไม่?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+                background: '#161617',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    orders = orders.filter(o => o.order_id !== orderId);
+                    renderAdminOrders();
+                    updateAdminDashboard();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'ลบคำสั่งซื้อเรียบร้อยแล้ว',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#161617',
+                        color: '#fff'
+                    });
+
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'deleteOrder', order_id: orderId })
+                    }).then(() => fetchAllDataFast());
+                }
+            });
+        }
+
+        function renderAdminCategories() {
+            const tbody = document.getElementById('adminCategoryList');
+            tbody.innerHTML = '';
+            categories.forEach(c => {
+                const catName = c.name || c.category || c;
+                const catId = c.id || 'CAT-OLD';
+                tbody.innerHTML += `
+                    <tr>
+                        <td><small class="text-white-50">${catId}</small></td>
+                        <td class="fw-bold">${catName}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-warning rounded-pill me-1" onclick="openEditCategoryModal('${catId}')">
+                                <i class="bi bi-pencil-square"></i> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger rounded-pill" onclick="deleteCategory('${catId}')">
+                                <i class="bi bi-trash"></i> ลบ
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openAddCategoryModal() {
+            document.getElementById('categoryModalTitle').innerText = "เพิ่มหมวดหมู่ใหม่";
+            document.getElementById('catId').value = "";
+            document.getElementById('catName').value = "";
+            new bootstrap.Modal(document.getElementById('categoryModal')).show();
+        }
+
+        function openEditCategoryModal(id) {
+            const c = categories.find(item => item.id === id);
+            if (!c) return;
+
+            document.getElementById('categoryModalTitle').innerText = "แก้ไขหมวดหมู่";
+            document.getElementById('catId').value = c.id;
+            document.getElementById('catName').value = c.name || c.category;
+
+            new bootstrap.Modal(document.getElementById('categoryModal')).show();
+        }
+
+        function saveCategory(e) {
+            e.preventDefault();
+            const catId = document.getElementById('catId').value;
+            const name = document.getElementById('catName').value.trim();
+
+            const payload = {
+                action: catId ? 'updateCategory' : 'addCategory',
+                id: catId,
+                name: name
+            };
+
+            if (catId) {
+                const idx = categories.findIndex(c => c.id === catId);
+                if (idx !== -1) categories[idx].name = name;
+            } else {
+                categories.push({ id: 'CAT-' + Date.now().toString().slice(-4), name: name });
+            }
+
+            renderCategoryMenu();
+            updateProductModalCategories();
+            renderAdminCategories();
+            bootstrap.Modal.getInstance(document.getElementById('categoryModal')).hide();
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: catId ? 'แก้ไขหมวดหมู่เรียบร้อย' : 'เพิ่มหมวดหมู่เรียบร้อย',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#161617',
+                color: '#fff'
+            });
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+                .then(() => fetchAllDataFast());
+        }
+
+        function deleteCategory(id) {
+            Swal.fire({
+                title: 'ยืนยันการลบหมวดหมู่?',
+                text: "หากลบแล้วจะไม่สามารถย้อนกลับได้",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+                background: '#161617',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    categories = categories.filter(c => c.id !== id);
+                    renderCategoryMenu();
+                    updateProductModalCategories();
+                    renderAdminCategories();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'ลบหมวดหมู่เรียบร้อยแล้ว',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#161617',
+                        color: '#fff'
+                    });
+
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'deleteCategory', id: id })
+                    }).then(() => fetchAllDataFast());
+                }
+            });
+        }
+
+        function renderAdminProducts() {
+            const tbody = document.getElementById('adminProductList');
+            tbody.innerHTML = '';
+            products.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><img src="${p.image}" style="width: 45px; height: 45px; object-fit: cover;" class="rounded-3"></td>
+                        <td><small class="text-white-50">${p.id}</small></td>
+                        <td>${p.name}</td>
+                        <td><span class="badge bg-white bg-opacity-10 text-primary">${p.category}</span></td>
+                        <td class="text-primary fw-bold">${Number(p.price).toLocaleString()} ฿</td>
+                        <td>${p.stock}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-warning rounded-pill me-1" onclick="openEditProductModal('${p.id}')">
+                                <i class="bi bi-pencil-square"></i> แก้ไข
+                            </button>
+                            <button class="btn btn-sm btn-danger rounded-pill" onclick="deleteProduct('${p.id}')">
+                                <i class="bi bi-trash"></i> ลบ
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openAddProductModal() {
+            document.getElementById('productModalTitle').innerText = "เพิ่มสินค้าใหม่";
+            document.getElementById('pId').value = "";
+            document.getElementById('productForm').reset();
+            updateProductModalCategories();
+            new bootstrap.Modal(document.getElementById('productModal')).show();
+        }
+
+        function openEditProductModal(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('productModalTitle').innerText = "แก้ไขข้อมูลสินค้า (" + id + ")";
+            document.getElementById('pId').value = p.id;
+            document.getElementById('pName').value = p.name;
+            updateProductModalCategories();
+            document.getElementById('pCategory').value = p.category;
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pStock').value = p.stock;
+            document.getElementById('pImage').value = p.image;
+
+            new bootstrap.Modal(document.getElementById('productModal')).show();
+        }
+
+        document.getElementById('productForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const pId = document.getElementById('pId').value;
+            const payload = {
+                action: pId ? 'updateProduct' : 'addProduct',
+                id: pId,
+                name: document.getElementById('pName').value,
+                category: document.getElementById('pCategory').value,
+                price: document.getElementById('pPrice').value,
+                stock: document.getElementById('pStock').value,
+                image: document.getElementById('pImage').value
+            };
+
+            if (pId) {
+                const idx = products.findIndex(p => p.id === pId);
+                if (idx !== -1) products[idx] = { ...products[idx], ...payload };
+            }
+
+            renderProducts(products);
+            renderAdminProducts();
+            bootstrap.Modal.getInstance(document.getElementById('productModal')).hide();
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: pId ? 'แก้ไขสินค้าเรียบร้อย' : 'เพิ่มสินค้าเรียบร้อย',
+                showConfirmButton: false,
+                timer: 1500,
+                background: '#161617',
+                color: '#fff'
+            });
+
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+                .then(() => fetchAllDataFast());
+        });
+
+        function deleteProduct(id) {
+            Swal.fire({
+                title: 'ยืนยันการลบสินค้า?',
+                text: "หากลบแล้วจะไม่สามารถย้อนกลับได้",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'ใช่, ลบเลย!',
+                cancelButtonText: 'ยกเลิก',
+                background: '#161617',
+                color: '#fff'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    products = products.filter(p => p.id !== id);
+                    renderProducts(products);
+                    renderAdminProducts();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'ลบสินค้าเรียบร้อยแล้ว',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        background: '#161617',
+                        color: '#fff'
+                    });
+
+                    fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'deleteProduct', id: id })
+                    }).then(() => fetchAllDataFast());
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
